@@ -569,7 +569,7 @@ textarea{min-height:92px}
 <dialog id="availabilityDialog"><form id="availabilityForm"><div class="head"><div class="row"><h2>老師可到校時段</h2><button type="button" class="secondary close">關閉</button></div></div><div class="body form"><label>老師<select id="availabilityTeacher"></select></label><label>可到校時段<div class="checks" id="availabilityChecks"></div></label><label>備註<input id="availabilityNote" placeholder="例如：可帶中音笛、只能到第一節、可代課"></label></div><div class="foot"><button type="button" class="danger" id="clearAvailability">清除本週填報</button><button type="submit">儲存</button></div></form></dialog>
 
 <script>
-const API_URL="PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+const API_URL="https://script.google.com/macros/s/AKfycbzIt6SlhoV7cykyLvmv3z9TI5cGOqgY8uK1ewyeBJ9lU6iLtCfx3yN1lIReSPE_QrxV/exec";
 const DAYS=["週一","週二","週三","週四","週五","週六","週日"];
 const DEFAULT={group:["初階","中階","大團","社團課","個別加強","其他"],issue:["節奏","音準","指法","換氣","音色","速度","合奏聆聽","看譜","專注度"],part:["高音笛一部","高音笛二部","中音笛","次中音笛","低音笛","個別學生","臨時分組","其他"],focus:["跟不上","節奏問題","音準問題","指法問題","需要個別指導","注意力不穩","表現突出","可帶領"],progressStage:["未開始","練習中","可慢速完成","可跟節拍器完成","可合奏","可演出"],stability:["很不穩定","偶爾成功","多數可完成","穩定完成"],slot:["m|早自習|上午|all","n|中午練習|中午|all","club|社團課|13:00–15:00|4","extra|加強課|17:00–17:30|4"]};
 const EVENT_LABEL={practice:"練習",club:"社團課",extra:"加練",exam:"考試／考核",show:"演出",cancel:"停課",admin:"行政提醒",other:"其他"};
