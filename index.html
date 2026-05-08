@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>中正國小直笛團｜V20.4 Queue Restore</title>
+<style>
+:root{--bg:#fbf8f4;--card:#fffdf9;--ink:#3b2417;--muted:#8a786b;--line:#eee1d6;--brown:#8e5b3a;--brown2:#bf8465;--green:#3f8e49;--greenBg:#edf8ec;--red:#c9434a;--redBg:#fff0f2;--amber:#c78519;--amberBg:#fff5df;--purple:#7551a1;--purpleBg:#f5effb;--shadow:0 18px 45px rgba(90,62,38,.08)}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#fffaf5,#fbf8f4 45%,#f6efe7);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}button,input,textarea,select{font:inherit}button{border:0;border-radius:999px;background:linear-gradient(135deg,var(--brown2),var(--brown));color:white;padding:12px 18px;min-height:44px;font-weight:900;box-shadow:0 12px 28px rgba(141,91,59,.18)}button:disabled{opacity:.55}button.secondary{background:white;color:var(--brown);border:1px solid var(--line);box-shadow:none}button.danger{background:#b33b36}.top{padding:calc(18px + env(safe-area-inset-top)) 22px 12px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.icon{background:transparent;color:var(--ink);box-shadow:none;font-size:26px;padding:0;width:40px}.title h1{font-size:38px;line-height:1.05;margin:0;color:#4a2716}.title .sub{font-size:17px;color:#8b6f5d;font-weight:900;margin-top:7px}.dateRow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px}.dateRow b{font-size:28px}.app{max-width:1100px;margin:auto;padding:0 22px 96px}.page{display:none}.page.active{display:block}.card{background:rgba(255,255,255,.82);border:1px solid var(--line);border-radius:28px;padding:20px;margin:16px 0;box-shadow:var(--shadow)}.head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.sectionTitle{display:flex;gap:14px;align-items:flex-start}.tile{width:58px;height:58px;border-radius:20px;display:grid;place-items:center;font-size:25px}.green{background:var(--greenBg);color:var(--green)}.red{background:var(--redBg);color:var(--red)}.amber{background:var(--amberBg);color:var(--amber)}.purple{background:var(--purpleBg);color:var(--purple)}h2{font-size:29px;margin:0}.muted{color:var(--muted);font-weight:700}.row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.list{display:grid;gap:10px}.teacher,.course,.handoff,.student,.note{background:rgba(255,255,255,.58);border:1px solid rgba(87,58,36,.08);border-radius:22px;padding:14px}.teacher{display:grid;grid-template-columns:50px 1fr auto;gap:12px;align-items:center}.avatar{width:50px;height:50px;border-radius:18px;background:var(--greenBg);display:grid;place-items:center;font-weight:900;font-size:20px;color:var(--green)}.name{font-size:19px;font-weight:950}.pill{display:inline-flex;align-items:center;margin:4px 4px 0 0;padding:7px 10px;border-radius:999px;font-size:13px;font-weight:850;background:var(--greenBg);color:var(--green)}.pill.red{background:var(--redBg);color:var(--red)}.pill.amber{background:var(--amberBg);color:var(--amber)}.pill.purple{background:var(--purpleBg);color:var(--purple)}.courseGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.course{display:grid;grid-template-columns:30px 1fr auto;gap:12px;align-items:center}.dot{width:28px;height:28px;border-radius:50%;background:var(--green);color:white;display:grid;place-items:center;font-weight:900}.dot.red{background:var(--red)}.status{padding:8px 12px;border-radius:999px;background:var(--greenBg);color:var(--green);font-weight:900}.status.todo{background:var(--redBg);color:var(--red)}.handoff{position:relative;display:grid;grid-template-columns:1fr auto;gap:12px}.handoff:before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:5px;border-radius:99px;background:var(--amber)}.empty{padding:16px;border:1px dashed var(--line);border-radius:20px;color:var(--muted);background:rgba(255,255,255,.45)}.tabs{display:flex;gap:8px;overflow:auto;padding-bottom:8px}.tab{background:#fff;color:var(--brown);border:1px solid var(--line);box-shadow:none;white-space:nowrap}.tab.active{background:var(--brown);color:white}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.day,.dow{border-radius:14px;padding:8px}.dow{text-align:center;color:var(--muted);font-size:12px}.day{min-height:80px;background:rgba(255,255,255,.6);border:1px solid var(--line);font-size:12px}.event{margin-top:5px;background:#f1e6dc;border-radius:8px;padding:5px}.bottomNav{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(255,255,255,.86);backdrop-filter:blur(20px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:40}.bottomNav button{border-radius:0;background:transparent;color:#8a7669;box-shadow:none;font-size:12px;padding:9px 2px;min-height:62px}.bottomNav button.active{color:var(--brown)}.bottomNav button.active:before{content:"";display:block;width:34px;height:4px;background:var(--brown);border-radius:99px;margin:0 auto 6px}.fab{position:fixed;right:18px;bottom:78px;z-index:50;border-radius:20px}.loading{position:fixed;left:14px;bottom:16px;background:#2b2620;color:white;border-radius:999px;padding:8px 12px;font-size:13px;display:none;z-index:80}dialog{width:min(920px,calc(100vw - 18px));max-width:calc(100vw - 18px);border:0;border-radius:28px;padding:0;background:var(--card);box-shadow:0 24px 80px #0005;overflow:hidden}dialog::backdrop{background:rgba(30,20,15,.45);backdrop-filter:blur(4px)}.dHead{padding:18px 20px;border-bottom:1px solid var(--line);background:#fff7ed;border-radius:28px 28px 0 0}.dBody{padding:18px;max-height:70vh;overflow:auto;overflow-x:hidden}.dFoot{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;position:sticky;bottom:0;background:rgba(255,253,249,.96);backdrop-filter:blur(14px)}.form{display:grid;gap:13px}label{display:grid;gap:6px;font-weight:900}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:18px;padding:13px;background:white}textarea{min-height:90px}.checks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.check{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);border-radius:18px;padding:10px;background:white}.check input{width:auto;margin-top:5px}.chip{display:inline-block;margin:4px;padding:9px 12px;border-radius:999px;background:#efe6d9}.chip.selected{background:#e2f5ea;font-weight:900}.wizardBars{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:12px}.wizardBars span{height:7px;border-radius:99px;background:#eadfce}.wizardBars span.active{background:var(--brown)}.wizardPage{display:none}.wizardPage.active{display:grid;gap:16px}.wizardPage h2{font-size:32px}.wizardCards{display:grid;gap:12px}.wizardCard{padding:18px;border:1px solid var(--line);border-radius:22px;background:white;font-weight:950}.wizardCard.selected{background:#fff1d6;border:3px solid var(--brown)}.wizardChips{display:flex;flex-wrap:wrap;gap:8px}@media(min-width:900px){.top{max-width:1100px;margin:auto}.app{padding-bottom:40px}.courseGrid{grid-template-columns:repeat(4,1fr)}.bottomNav{left:50%;transform:translateX(-50%);max-width:700px;border-radius:24px 24px 0 0}}@media(max-width:430px){.title h1{font-size:34px}.courseGrid{grid-template-columns:1fr}.course{grid-template-columns:30px 1fr}.course .status{grid-column:2;width:max-content}.teacher{grid-template-columns:50px 1fr}.teacher .status{grid-column:2;width:max-content}.checks{grid-template-columns:1fr}dialog{width:calc(100vw - 16px);max-width:calc(100vw - 16px);border-radius:24px}.dHead{padding:16px}.dHead h2{font-size:28px}.dBody{padding:16px;max-height:68vh}input,textarea,select{font-size:16px}}
+</style>
+</head>
+<body>
+<section class="top"><div class="topbar"><button class="icon" data-page-go="more">☰</button><button class="icon" id="refresh">♡</button></div><div class="title"><h1>中正國小直笛團</h1><div class="sub">V20.4 Queue Restore教師工作台</div></div><div class="dateRow"><div>目前查看 <b id="dateLabel">讀取中</b></div><button class="secondary" id="todayBtn">今天</button></div></section>
+<main class="app">
+<section class="page active" id="today">
+<div class="row"><button class="secondary" id="prevDay">前一天</button><button class="secondary" id="nextDay">後一天</button></div>
+<section class="card"><div class="head"><div class="sectionTitle"><div class="tile green">♧</div><div><h2>可到校老師</h2><div class="muted" id="availSummary">讀取中</div></div></div><button class="secondary" id="openAvailability">查看全部 ›</button></div><div class="list" id="availList"></div></section>
+<section class="card"><div class="head"><div class="sectionTitle"><div class="tile red">□</div><div><h2>課程紀錄</h2><div class="muted" id="recordSummary">讀取中</div></div></div><button class="secondary" data-page-go="records">查看全部 ›</button></div><div class="courseGrid" id="todayCourses"></div></section>
+<section class="card"><div class="head"><div class="sectionTitle"><div class="tile amber">↔</div><div><h2>教學接力</h2><div class="muted" id="handoffSummary">顯示團別與老師</div></div></div></div><div class="list" id="handoffList"></div></section>
+<section class="card"><div class="head"><div class="sectionTitle"><div class="tile purple">♙</div><div><h2>未參與學生</h2><div class="muted" id="absentSummary">今日統計</div></div></div></div><div id="absentList"></div></section>
+</section>
+<section class="page" id="records"><section class="card"><h2>依日期與時段填寫</h2><div class="tabs" id="weekTabs"></div><div id="slotRecords"></div></section><section class="card"><h2>本週所有紀錄</h2><div id="allRecords"></div></section></section>
+<section class="page" id="calendar"><section class="card"><div class="row"><h2>行事曆</h2><div><button class="secondary" id="prevMonth">上月</button><button class="secondary" id="nextMonth">下月</button><button id="addEvent">新增事件</button></div></div><h3 id="monthLabel"></h3><div class="calendar" id="calendarGrid"></div></section></section>
+<section class="page" id="analytics"><section class="card"><h2>教學分析</h2><div id="analyticsView"></div></section></section>
+<section class="page" id="more"><section class="card"><h2>同步監控</h2><div id="syncPanel" class="note"></div></section><section class="card"><h2>學生名單</h2><button id="addStudent">新增學生</button><div id="studentList"></div></section><section class="card"><h2>管理中心</h2><div class="row"><button id="openSettings">設定中心</button><button class="secondary" id="addTeacher">新增老師</button></div></section></section>
+</main>
+<nav class="bottomNav"><button class="active" data-page="today">⌂<br>今日</button><button data-page="records">✎<br>紀錄</button><button data-page="calendar">▣<br>行事曆</button><button data-page="analytics">▥<br>分析</button><button data-page="more">•••<br>更多</button></nav>
+<button class="fab" id="quickAdd">＋ 新增紀錄</button><div class="loading" id="loading">同步中……</div>
+
+<dialog id="recordDialog"><form id="recordForm"><div class="dHead"><div class="row"><h2 id="recordTitle">新增教學紀錄</h2><button type="button" class="secondary close">關閉</button></div><div class="wizardBars"><span></span><span></span><span></span><span></span><span></span><span></span></div></div><div class="dBody wizardBody">
+<section class="wizardPage active" data-step="0"><h2>1. 今天上哪一堂？</h2><div id="wizardSlotCards" class="wizardCards"></div></section>
+<section class="wizardPage" data-step="1"><h2>2. 哪位老師？哪一團？</h2><label>老師<select id="recTeacher"></select></label><label>團別<select id="recGroup"></select></label></section>
+<section class="wizardPage" data-step="2"><h2>3. 本堂有哪些學生？</h2><div id="studentPick" class="wizardChips"></div></section>
+<section class="wizardPage" data-step="3"><h2>4. 有沒有重點學生？</h2><div id="focusPick" class="wizardChips"></div><label>重點標記<div class="checks" id="focusTagChecks"></div></label></section>
+<section class="wizardPage" data-step="4"><h2>5. 團體狀況</h2><label>團體進度階段<select id="progressStage"></select></label><label>團體穩定度<select id="stability"></select></label><label>團體問題<div class="checks" id="issueChecks"></div></label><label>聲部/學生<div class="checks" id="partChecks"></div></label></section>
+<section class="wizardPage" data-step="5"><h2>6. 寫下紀錄</h2><label>今天教學<textarea id="content" placeholder="今天教了什麼？"></textarea></label><label>目前進度<textarea id="progress" placeholder="目前到哪裡？"></textarea></label><label>學生狀況<textarea id="studentStatus"></textarea></label><label>交接<textarea id="handoff" placeholder="下一位老師需要注意什麼？"></textarea></label><label>狀態<select id="state"><option>未完成</option><option selected>部分完成</option><option>已完成</option></select></label></section>
+</div><div class="dFoot"><button type="button" class="secondary" id="wizardPrev">上一步</button><button type="button" id="wizardNext">下一步</button><button type="submit" id="wizardSave">儲存紀錄</button></div></form></dialog>
+
+<dialog id="availabilityDialog"><form id="availabilityForm"><div class="dHead"><div class="row"><h2>老師可到校時段</h2><button type="button" class="secondary close">關閉</button></div></div><div class="dBody form"><label>老師<select id="availTeacher"></select></label><label>可到校時段<div class="checks" id="availChecks"></div></label><label>備註<input id="availNote" placeholder="例如：可代課、只能第一節"></label></div><div class="dFoot"><button type="button" class="danger" id="clearAvailability">清除本週填報</button><button type="submit">儲存</button></div></form></dialog>
+<dialog id="teacherDialog"><form id="teacherForm"><div class="dHead"><div class="row"><h2>老師資料</h2><button type="button" class="secondary close">關閉</button></div></div><div class="dBody form"><label>姓名<input id="teacherName" required></label><label>備註<input id="teacherNote"></label></div><div class="dFoot"><button type="submit">儲存</button></div></form></dialog>
+
+<dialog id="eventDialog"><form id="eventForm"><div class="dHead"><div class="row"><h2>行事曆事件</h2><button type="button" class="secondary close">關閉</button></div></div><div class="dBody form"><label>日期<input id="eventDate" type="date"></label><label>標題<input id="eventTitle"></label><label>類型<select id="eventType"><option value="practice">練習</option><option value="club">社團課</option><option value="extra">加練</option><option value="exam">考試/考核</option><option value="show">演出</option><option value="admin">行政</option><option value="other">其他</option></select></label><label>開始時間<input id="eventStart" placeholder="08:00"></label><label>結束時間<input id="eventEnd" placeholder="09:00"></label><label>地點<input id="eventLocation"></label><label>備註<textarea id="eventNote"></textarea></label></div><div class="dFoot"><button type="submit">儲存</button></div></form></dialog>
+<dialog id="settingsDialog"><div class="dHead"><div class="row"><h2>設定中心</h2><button type="button" class="secondary close">關閉</button></div></div><div class="dBody"><section class="card"><h3>時段管理</h3><div class="form"><label>名稱<input id="slotName" placeholder="第二早自習"></label><label>開始<input id="slotStart" placeholder="08:00"></label><label>結束<input id="slotEnd" placeholder="08:35"></label><label>適用日<select id="slotWeekday"><option value="all">每天</option><option value="0">週一</option><option value="1">週二</option><option value="2">週三</option><option value="3">週四</option><option value="4">週五</option><option value="5">週六</option><option value="6">週日</option></select></label><button id="saveSlot" type="button">新增時段</button></div><div id="slotList"></div></section><section class="card"><h3>勾選選項</h3><label>類型<select id="configType"><option value="group">團別</option><option value="issue">團體問題</option><option value="part">聲部</option><option value="focus">重點標記</option><option value="progressStage">進度階段</option><option value="stability">穩定度</option></select></label><label>文字<input id="configValue"></label><button id="saveConfig" type="button">新增選項</button><div id="configList"></div></section></div></dialog>
+
+<script>
+function safeSyncBadgeHtml(status){try{return syncBadgeHtml(status)}catch(e){return '<span class="pill">同步狀態未明</span>'}}
+
+const API_URL="PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+const CACHE_KEY="recorderV20.4 Queue Restore";
+const DEVICE_ID=(()=>{let x=localStorage.getItem("recorderDeviceId");if(!x){x="dev_"+Math.random().toString(36).slice(2)+"_"+Date.now().toString(36);localStorage.setItem("recorderDeviceId",x)}return x})();
+const SYNC_KEY="recorderV20.4 Queue Restore";
+let viewDate=new Date(),monthDate=new Date(),STATE={ok:true,teachers:[],students:[],slots:[],availability:[],records:[],events:[],config:{group:[],focus:[],part:[],issue:[],progressStage:[],stability:[]},analytics:{},todayAbsent:[]},selectedStudents=[],focusStudents=[],editingRecordId="",editingTeacherId="",editingStudentId="",wizardStep=0,wizardData={},isSaving=false;
+const $=id=>document.getElementById(id),pad=n=>String(n).padStart(2,"0"),iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+function id(prefix){return prefix+"_"+Math.random().toString(36).slice(2,9)+"_"+Date.now().toString(36)}function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}function monday(d){d=new Date(d);d.setHours(0,0,0,0);const day=d.getDay();d.setDate(d.getDate()-day+(day===0?-6:1));return d}function dayIndex(d){const g=d.getDay();return g===0?6:g-1}function monthKey(){return monthDate.getFullYear()+"-"+pad(monthDate.getMonth()+1)}function fullDate(d){return d.getFullYear()+"/"+(d.getMonth()+1)+"/"+d.getDate()+"（"+"日一二三四五六"[d.getDay()]+"）"}function timeRange(a,b){return a&&b?a+"–"+b:(a||b||"")}function weekdayLabel(v){v=String(v??'all');if(v==='all')return '每天';const names='一二三四五六日';const n=Number(v);return Number.isInteger(n)&&n>=0&&n<7?'週'+names[n]:'未設定'}function cfg(t){return STATE.config[t]||[]}function loading(v){$("loading").style.display=v?"block":"none"}function slotText(s){return s.name+" "+timeRange(s.start,s.end)}function todaySlots(){return STATE.slots.filter(s=>String(s.weekday||'all')==='all'||String(s.weekday)===String(dayIndex(viewDate)))}
+function jsonp(url){return new Promise((resolve,reject)=>{const cb="cb_"+Date.now()+"_"+Math.floor(Math.random()*999999),s=document.createElement("script"),sep=url.includes("?")?"&":"?";const timer=setTimeout(()=>{cleanup();reject(new Error("讀取逾時"))},15000);function cleanup(){clearTimeout(timer);delete window[cb];s.remove()}window[cb]=data=>{cleanup();resolve(data)};s.onerror=()=>{cleanup();reject(new Error("JSONP 載入失敗"))};s.src=url+sep+"callback="+cb+"&_="+Date.now();document.body.appendChild(s)})
+function toast(msg){
+  const box=$("loading");
+  box.textContent=msg;
+  box.style.display="block";
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer=setTimeout(()=>{box.style.display="none";box.textContent="同步中……"},2600);
+}
+function queueGet(){try{return JSON.parse(localStorage.getItem(SYNC_KEY)||"[]")}catch(e){return []}}
+function queueSet(list){localStorage.setItem(SYNC_KEY,JSON.stringify(list))}
+function queueAdd(item){const list=queueGet().filter(x=>x.requestId!==item.requestId);list.push({...item,syncStatus:item.syncStatus||"pending",retryCount:item.retryCount||0,queuedAt:Date.now()});queueSet(list)}
+function queueRemove(requestId){queueSet(queueGet().filter(x=>x.requestId!==requestId))}
+function queueMarkFailed(requestId){queueSet(queueGet().map(x=>x.requestId===requestId?{...x,syncStatus:"failed",retryCount:(x.retryCount||0)+1}:x))}
+function payloadIsLong(p){return p.action==="record.save" && JSON.stringify(p).length>1200}
+async function postNoCors(body){await fetch(API_URL,{method:"POST",mode:"no-cors",cache:"no-cache",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)})}
+async function syncCheck(item){
+  const table=item.action&&item.action.indexOf("record.")===0?"records":item.action&&item.action.indexOf("event.")===0?"events":"";
+  if(!table||!item.id)return false;
+  const data=await jsonp(API_URL+"?payload="+encodeURIComponent(JSON.stringify({action:"sync.check",table,id:item.id,requestId:id("check")})));
+  return !!(data&&data.ok&&data.found);
+}
+async function flushQueue(){
+  const list=queueGet();
+  if(!list.length||!navigator.onLine)return;
+  toast("背景同步中："+list.length+" 筆");
+  for(const item of list.slice(0,5)){
+    try{
+      if(payloadIsLong(item)){
+        await postNoCors(item);
+        setTimeout(async()=>{try{if(await syncCheck(item)){queueRemove(item.requestId);toast("已同步")}else{queueMarkFailed(item.requestId);toast("尚未確認同步")}}catch(e){queueMarkFailed(item.requestId)}},1500);
+      }else{
+        const data=await jsonp(API_URL+"?payload="+encodeURIComponent(JSON.stringify(item)));
+        if(data&&data.ok)queueRemove(item.requestId);else queueMarkFailed(item.requestId);
+      }
+    }catch(e){queueMarkFailed(item.requestId)}
+  }
+  setTimeout(()=>apiGet(),1800);
+}
+window.addEventListener("online",flushQueue);
+function syncBadgeHtml(status){
+  if(status==="pending")return '<span class="pill amber">同步中</span>';
+  if(status==="failed")return '<span class="pill red">同步失敗</span>';
+  return '<span class="pill">已同步</span>';
+}
+function updateSyncPanel(){
+  const list=queueGet(), failed=list.filter(x=>x.syncStatus==="failed").length;
+  const el=$("syncPanel");
+  if(el)el.innerHTML='<b>同步狀態</b><div class="muted">待同步：'+list.length+' 筆｜失敗：'+failed+' 筆</div><button class="secondary" id="retrySync" type="button">手動重試</button>';
+  const btn=$("retrySync"); if(btn)btn.onclick=flushQueue;
+}
+}
+function toast(msg){
+  const box=$("loading");
+  box.textContent=msg;
+  box.style.display="block";
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer=setTimeout(()=>{box.style.display="none";box.textContent="同步中……"},2600);
+}
+function payloadIsLong(payload){
+  const size=JSON.stringify(payload).length;
+  if(payload.action==='record.save') return size>1400 || !!(payload.content||payload.progress||payload.studentStatus||payload.handoff);
+  return size>1500;
+}
+function pendingKey(){return "recorderV19PendingSync"}
+function getPending(){try{return JSON.parse(localStorage.getItem(pendingKey())||"[]")}catch(e){return []}}
+function setPending(list){localStorage.setItem(pendingKey(),JSON.stringify(list))}
+function addPending(body){const list=getPending().filter(x=>x.requestId!==body.requestId);list.push({...body,queuedAt:Date.now(),status:"syncing"});setPending(list)}
+function removeConfirmedPending(){
+  try{
+    const ids=new Set((STATE.records||[]).map(r=>r.id).concat((STATE.events||[]).map(e=>e.id)));
+    setPending(getPending().filter(p=>!ids.has(p.id)));
+  }catch(e){}
+}
+async function postNoCors(body){
+  await fetch(API_URL,{method:"POST",mode:"no-cors",cache:"no-cache",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)});
+  return {ok:true,opaque:true};
+}
+async function flushPending(){
+  const list=getPending();
+  if(!list.length || !navigator.onLine)return;
+  for(const item of list.slice(0,5)){
+    try{await postNoCors(item)}catch(e){}
+  }
+  setTimeout(()=>apiGet(),1200);
+}
+window.addEventListener("online", flushPending);
+function renderCache(){try{const c=JSON.parse(localStorage.getItem(CACHE_KEY)||"null");if(c&&c.ok){STATE=c;try{render()}catch(err){console.error('render cache failed',err)}}}catch(e){}}
+async function apiGet(){if(API_URL.includes("PASTE_YOUR"))return alert("請先貼 Apps Script 網址");renderCache();loading(true);try{const url=API_URL+"?dateKey="+encodeURIComponent(iso(viewDate))+"&weekStart="+encodeURIComponent(iso(monday(viewDate)))+"&month="+encodeURIComponent(monthKey());const data=await jsonp(url);if(!data.ok)throw new Error(data.message||"讀取失敗");STATE=data;removeConfirmedPending();localStorage.setItem(CACHE_KEY,JSON.stringify(data));render()}catch(e){alert("讀取失敗："+e.message);console.error(e)}finally{loading(false)}}
+async function apiPost(payload,opt={}){
+  payload = payload || {};
+  payload.requestId = payload.requestId || id("req");
+  payload.deviceId = payload.deviceId || DEVICE_ID_SAFE;
+  payload.updatedAt = payload.updatedAt || new Date().toISOString();
+
+  if(opt.optimistic){
+    try{opt.optimistic()}catch(e){console.warn("optimistic update failed",e)}
+    try{render()}catch(e){console.warn("render after optimistic failed",e)}
+  }
+
+  const queued = queueAdd(payload);
+
+  // Short payloads are sent immediately through JSONP so user gets a real result.
+  if(!payloadIsLong(queued)){
+    try{
+      const result = await jsonp(API_URL+"?payload="+encodeURIComponent(JSON.stringify(queued)));
+      if(result && result.ok){
+        queueRemove(queued.requestId);
+        setTimeout(()=>{if(typeof apiGet==="function")apiGet()},600);
+        return result;
+      }
+      queueMarkFailed(queued.requestId,result&&result.message?result.message:"寫入失敗");
+      alert("寫入失敗："+(result&&result.message?result.message:"請稍後重試"));
+      return result || {ok:false};
+    }catch(e){
+      queueMarkFailed(queued.requestId,String(e&&e.message||e));
+      alert("寫入失敗："+String(e&&e.message||e));
+      return {ok:false,message:String(e&&e.message||e)};
+    }
+  }
+
+  // Long record payloads use POST no-cors, then queue will verify by sync.check.
+  try{
+    await postNoCors(queued);
+    setTimeout(()=>flushQueue(),1800);
+    return {ok:true,pending:true};
+  }catch(e){
+    queueMarkFailed(queued.requestId,String(e&&e.message||e));
+    alert("寫入失敗："+String(e&&e.message||e));
+    return {ok:false,message:String(e&&e.message||e)};
+  }
+}
+function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".bottomNav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));scrollTo({top:0,behavior:"smooth"})}
+function render(){setTimeout(renderStudentList,0);if(typeof updateSyncPanel==='function')updateSyncPanel();renderTop();renderToday();renderRecords();renderCalendar();renderAnalytics();renderMore();renderSettings()}
+function renderTop(){$("dateLabel").textContent=fullDate(viewDate)}
+function renderToday(){const dk=iso(viewDate),av=STATE.availability.filter(a=>a.dateKey===dk),rs=STATE.records.filter(r=>r.dateKey===dk),byT={};av.forEach(a=>{if(!byT[a.teacherId])byT[a.teacherId]={name:a.teacherName,slots:[]};byT[a.teacherId].slots.push(a.slotName+" "+timeRange(a.start,a.end))});const teachers=Object.values(byT);$("availSummary").textContent=teachers.length+" 位老師・共 "+av.length+" 個時段";$("availList").innerHTML=teachers.length?teachers.map(t=>'<div class="teacher"><div class="avatar">'+esc(t.name.replace("老師","").slice(0,1))+'</div><div><div class="name">'+esc(t.name)+'</div>'+t.slots.map(s=>'<span class="pill">'+esc(s)+'</span>').join("")+'</div><span class="status">已填寫</span></div>').join(""):'<div class="empty">目前這一天尚無老師填寫可到校時段。</div>';const slots=todaySlots();$("recordSummary").textContent="共 "+slots.length+" 節課・待完成 "+Math.max(0,slots.length-rs.length)+" 節";$("todayCourses").innerHTML=slots.length?slots.map(s=>{const done=rs.some(r=>r.slotId===s.id);return'<div class="course"><div class="dot '+(done?'':'red')+'">'+(done?'✓':'•')+'</div><div><b>'+esc(slotText(s))+'</b><div class="muted">'+fullDate(viewDate)+'</div></div><button class="status '+(done?'':'todo')+'" data-action="record-slot" data-slot="'+esc(s.id)+'">'+(done?'已完成':'待填寫')+' ›</button></div>'}).join(""):'<div class="empty">這一天沒有設定課程時段。</div>';const hand=rs.filter(r=>r.handoff);$("handoffSummary").textContent=hand.length+" 則交接";$("handoffList").innerHTML=hand.length?hand.map(r=>'<div class="handoff"><div><b>'+esc(r.groupName||"未分團")+'｜'+esc(r.teacherName)+'</b><p>'+esc(r.handoff)+'</p><div class="muted">'+esc(r.slotName)+' '+esc(timeRange(r.start,r.end))+'</div></div><span class="pill amber">交接</span></div>').join(""):'<div class="empty">目前沒有交接事項。</div>';$("absentSummary").textContent="共 "+(STATE.todayAbsent||[]).length+" 位學生";$("absentList").innerHTML=(STATE.todayAbsent||[]).length?STATE.todayAbsent.map(s=>'<span class="pill purple">'+esc(s.name)+'</span>').join(""):'<div class="empty">目前沒有未參與學生，或尚未建立學生名單。</div>'}
+function renderRecords(){const m=monday(viewDate);$("weekTabs").innerHTML=Array.from({length:7},(_,i)=>{const d=addDays(m,i);return'<button class="tab '+(iso(d)===iso(viewDate)?'active':'')+'" data-date="'+iso(d)+'">'+(d.getMonth()+1)+"/"+d.getDate()+"</button>"}).join("");$("slotRecords").innerHTML=todaySlots().map(s=>{const rs=STATE.records.filter(r=>r.dateKey===iso(viewDate)&&r.slotId===s.id);return'<div class="card"><div class="row"><h3>'+esc(slotText(s))+'</h3><button class="secondary" data-action="record-slot" data-slot="'+esc(s.id)+'">填寫</button></div>'+(rs.length?rs.map(recordHtml).join(""):'<div class="empty">尚未填寫。</div>')+'</div>'}).join("");$("allRecords").innerHTML=STATE.records.length?STATE.records.map(recordHtml).join(""):'<div class="empty">本週沒有紀錄。</div>'}
+function recordHtml(r){return'<div class="note"><div class="muted">'+safeSyncBadgeHtml(r.syncStatus||'synced')+' '+esc(r.dateKey)+'｜'+esc(r.slotName)+'｜'+esc(r.groupName)+'｜'+esc(r.teacherName)+'</div><p><b>教學：</b>'+esc(r.content||"")+'</p><p><b>進度：</b>'+esc(r.progress||"")+'</p><p><b>學生：</b>'+esc(r.studentStatus||"")+'</p><p><b>交接：</b>'+esc(r.handoff||"")+'</p><div class="row"><button class="secondary" data-action="edit-record" data-id="'+esc(r.id)+'">編輯</button><button class="danger" data-action="delete-record" data-id="'+esc(r.id)+'">刪除</button></div></div>'}
+function renderCalendar(){const y=monthDate.getFullYear(),m=monthDate.getMonth();$("monthLabel").textContent=y+" 年 "+(m+1)+" 月";let h=["一","二","三","四","五","六","日"].map(d=>'<div class="dow">週'+d+'</div>').join("");const first=new Date(y,m,1),start=new Date(first);start.setDate(1-((first.getDay()+6)%7));for(let i=0;i<42;i++){const d=addDays(start,i),ds=iso(d),ev=STATE.events.filter(e=>e.dateKey===ds);h+='<div class="day"><b>'+d.getDate()+'</b>'+ev.map(e=>'<div class="event">'+esc(e.title)+'<br><span class="muted">'+esc(e.start)+' '+esc(e.location)+'</span></div>').join("")+'</div>'}$("calendarGrid").innerHTML=h}
+function renderAnalytics(){const a=STATE.analytics||{};$("analyticsView").innerHTML='<div class="courseGrid"><div class="card"><h2>'+esc(a.totalRecords||0)+'</h2><div class="muted">本週紀錄</div></div><div class="card"><h2>'+esc(a.totalHandoffs||0)+'</h2><div class="muted">交接</div></div></div><h3>各團紀錄</h3>'+bars(a.groupCounts||[])+'<h3>問題統計</h3>'+bars(a.issueCounts||[])}
+function bars(list){return list.length?list.map(x=>'<div class="row note"><span>'+esc(x.name)+'</span><b>'+x.count+'</b></div>').join(""):'<div class="empty">尚無資料</div>'}
+function renderMore(){$("studentList").innerHTML=STATE.students.length?STATE.students.map(s=>'<div class="student note"><b>'+esc(s.name)+'</b><div class="muted">'+esc(s.grade)+'｜'+esc(s.groups.join("、"))+'</div></div>').join(""):'<div class="empty">尚無學生。</div>'}
+
+function removeSlotOptimistic(target){
+  const id = target.id || "";
+  const code = target.code || "";
+  const name = target.name || "";
+  STATE.slots = (STATE.slots||[]).filter(s=>{
+    if(id) return s.id !== id;
+    if(code) return s.code !== code;
+    if(name) return s.name !== name;
+    return true;
+  });
+}
+
+function renderSettings(){
+  $("slotList").innerHTML=STATE.slots.map(s=>'<div class="note"><b>'+esc(s.name)+'</b><div class="muted">'+esc(timeRange(s.start,s.end))+'｜'+esc(weekdayLabel(s.weekday))+'</div><button class="danger" data-action="delete-slot" data-id="'+esc(s.id)+'" data-code="'+esc(s.code||'')+'" data-name="'+esc(s.name||'')+'">刪除</button></div>').join("");
+  $("configList").innerHTML=Object.keys(STATE.config||{}).map(type=>'<div class="note"><b>'+type+'</b><div>'+STATE.config[type].map(v=>'<span class="chip">'+esc(v)+'</span>').join("")+'</div></div>').join("")
+  setTimeout(renderStudentList,0);
+}
+function fillSelect(el,arr,getVal,getTxt,sel){el.innerHTML=arr.map(x=>'<option value="'+esc(getVal(x))+'" '+(getVal(x)===sel?'selected':'')+'>'+esc(getTxt(x))+'</option>').join("")}
+function checks(el,items,sel=[]){el.innerHTML=items.map(v=>'<label class="check"><input type="checkbox" value="'+esc(v)+'" '+(sel.includes(v)?'checked':'')+'>'+esc(v)+'</label>').join("")}
+function openRecord(slotId='',r=null){editingRecordId=r?r.id:"";wizardStep=0;wizardData={dateKey:r?r.dateKey:iso(viewDate),slotId:r?r.slotId:slotId};selectedStudents=r?r.studentIds||[]:[];focusStudents=r?r.focusStudentIds||[]:[];$("recordTitle").textContent=r?'編輯教學紀錄':'新增教學紀錄';fillSelect($("recTeacher"),STATE.teachers,t=>t.id,t=>t.name,r?r.teacherId:'');fillSelect($("recGroup"),cfg('group').map(x=>({x})),o=>o.x,o=>o.x,r?r.groupName:'');fillSelect($("progressStage"),cfg('progressStage').map(x=>({x})),o=>o.x,o=>o.x,r?r.progressStage:'練習中');fillSelect($("stability"),cfg('stability').map(x=>({x})),o=>o.x,o=>o.x,r?r.stability:'偶爾成功');checks($("issueChecks"),cfg('issue'),r?r.issues||[]:[]);checks($("partChecks"),cfg('part'),r?r.parts||[]:[]);checks($("focusTagChecks"),cfg('focus'),r?r.focusTags||[]:[]);["content","progress","studentStatus","handoff"].forEach(id=>$(id).value=r?r[id]||'':'');$("state").value=r?r.state||'部分完成':'部分完成';renderWizardSlots();renderPickers();showWizardStep(0);$("recordDialog").showModal()}
+function renderWizardSlots(){const m=monday(viewDate);let cards='';for(let i=0;i<7;i++){const d=addDays(m,i),dk=iso(d);STATE.slots.filter(s=>s.weekday==='all'||s.weekday===String(dayIndex(d))).forEach(s=>{const selected=(wizardData.dateKey+'|'+wizardData.slotId)===(dk+'|'+s.id);cards+='<div class="wizardCard '+(selected?'selected':'')+'" data-action="choose-wizard-slot" data-date="'+dk+'" data-slot="'+esc(s.id)+'"><div>'+esc(slotText(s))+'</div><div class="muted">'+fullDate(d)+'</div></div>'})}$("wizardSlotCards").innerHTML=cards||'<div class="empty">本週尚無時段。</div>'}
+function showWizardStep(n){wizardStep=Math.max(0,Math.min(5,n));document.querySelectorAll(".wizardPage").forEach(p=>p.classList.toggle("active",Number(p.dataset.step)===wizardStep));document.querySelectorAll(".wizardBars span").forEach((b,i)=>b.classList.toggle("active",i<=wizardStep));$("wizardPrev").style.display=wizardStep===0?"none":"inline-flex";$("wizardNext").style.display=wizardStep===5?"none":"inline-flex";$("wizardSave").style.display=wizardStep===5?"inline-flex":"none"}
+function renderPickers(){const g=$("recGroup").value;const list=STATE.students.filter(s=>!g||s.groups.includes(g));$("studentPick").innerHTML=list.map(s=>'<span class="chip '+(selectedStudents.includes(s.id)?'selected':'')+'" data-action="toggle-student" data-id="'+esc(s.id)+'">'+esc(s.name)+'</span>').join("")||'<div class="empty">沒有學生</div>';$("focusPick").innerHTML=list.filter(s=>selectedStudents.includes(s.id)).map(s=>'<span class="chip '+(focusStudents.includes(s.id)?'selected':'')+'" data-action="toggle-focus" data-id="'+esc(s.id)+'">'+esc(s.name)+'</span>').join("")||'<div class="empty">請先選本堂學生</div>'}
+function openAvailability(){fillSelect($("availTeacher"),STATE.teachers,t=>t.id,t=>t.name,'');renderAvailabilityChecks();$("availabilityDialog").showModal()}
+function renderAvailabilityChecks(){const tid=$("availTeacher").value,existing=STATE.availability.filter(a=>a.teacherId===tid),keys=existing.map(a=>a.dateKey+'|'+a.slotId),m=monday(viewDate);let h='';for(let i=0;i<7;i++){const d=addDays(m,i),dk=iso(d);STATE.slots.filter(s=>s.weekday==='all'||s.weekday===String(dayIndex(d))).forEach(s=>h+='<label class="check"><input type="checkbox" value="'+dk+'|'+esc(s.id)+'" '+(keys.includes(dk+'|'+s.id)?'checked':'')+'>'+fullDate(d)+'｜'+esc(slotText(s))+'</label>')}$("availChecks").innerHTML=h}
+
+function openStudent(id){
+  const s = (STATE.students||[]).find(x=>x.id===id) || {};
+  $("studentId").value = s.id || "";
+  $("studentName").value = s.name || "";
+  $("studentGrade").value = s.grade || "";
+  $("studentGroups").value = s.groups || "";
+  $("studentNote").value = s.note || "";
+  $("studentDialogTitle").textContent = s.id ? "編輯學生" : "新增學生";
+  $("studentDialog").showModal();
+}
+
+function renderStudentList(){
+  const list = $("studentList");
+  if(!list) return;
+  const students = STATE.students || [];
+  if(!students.length){
+    list.innerHTML = '<div class="muted">目前尚未建立學生名單。</div>';
+    return;
+  }
+  list.innerHTML = students.map(s=>
+    '<div class="note"><b>'+esc(s.name||'未命名學生')+'</b>'+
+    '<div class="muted">'+esc(s.grade||'')+(s.groups?'｜'+esc(s.groups):'')+'</div>'+
+    (s.note?'<div>'+esc(s.note)+'</div>':'')+
+    '<button class="secondary" data-action="edit-student" data-id="'+esc(s.id)+'">編輯</button> '+
+    '<button class="danger" data-action="delete-student" data-id="'+esc(s.id)+'">刪除</button></div>'
+  ).join("");
+}
+
+function bind(){document.querySelectorAll("[data-page]").forEach(b=>b.onclick=()=>showPage(b.dataset.page));document.querySelectorAll("[data-page-go]").forEach(b=>b.onclick=()=>showPage(b.dataset.pageGo));$("refresh").onclick=apiGet;$("todayBtn").onclick=()=>{viewDate=new Date();monthDate=new Date();apiGet()};$("prevDay").onclick=()=>{viewDate=addDays(viewDate,-1);monthDate=new Date(viewDate);apiGet()};$("nextDay").onclick=()=>{viewDate=addDays(viewDate,1);monthDate=new Date(viewDate);apiGet()};$("quickAdd").onclick=()=>openRecord();$("openAvailability").onclick=openAvailability;$("availTeacher").onchange=renderAvailabilityChecks;$("addTeacher").onclick=()=>{editingTeacherId="";$("teacherName").value='';$("teacherNote").value='';$("teacherDialog").showModal()};$("addStudent").onclick=()=>{editingStudentId="";$("studentName").value='';$("studentGrade").value='';$("studentNote").value='';checks($("studentGroups"),cfg('group'));$("studentDialog").showModal()};$("openSettings").onclick=()=>$("settingsDialog").showModal();$("addEvent").onclick=()=>{$("eventDate").value=iso(viewDate);["eventTitle","eventStart","eventEnd","eventLocation","eventNote"].forEach(id=>$(id).value='');$("eventDialog").showModal()};$("prevMonth").onclick=()=>{monthDate.setMonth(monthDate.getMonth()-1);apiGet()};$("nextMonth").onclick=()=>{monthDate.setMonth(monthDate.getMonth()+1);apiGet()};$("recGroup").onchange=renderPickers;$("wizardPrev").onclick=()=>showWizardStep(wizardStep-1);$("wizardNext").onclick=()=>showWizardStep(wizardStep+1);document.querySelectorAll(".close").forEach(b=>b.onclick=()=>b.closest("dialog").close());
+document.addEventListener("click",e=>{const tab=e.target.closest(".tab");if(tab){viewDate=new Date(tab.dataset.date+'T00:00:00');render();return}const b=e.target.closest("[data-action]");if(!b)return;const a=b.dataset.action;if(a==='record-slot')openRecord(b.dataset.slot);if(a==='choose-wizard-slot'){wizardData.dateKey=b.dataset.date;wizardData.slotId=b.dataset.slot;renderWizardSlots()}if(a==='edit-record')openRecord('',STATE.records.find(r=>r.id===b.dataset.id));if(a==='delete-record'&&confirm('刪除這筆紀錄？'))apiPost({action:'record.delete',id:b.dataset.id},{optimistic:()=>{STATE.records=STATE.records.filter(r=>r.id!==b.dataset.id)}});if(a==='delete-slot'&&confirm('刪除時段？'))apiPost({action:'slot.delete',id:b.dataset.id,code:b.dataset.code,name:b.dataset.name},{optimistic:()=>{removeSlotOptimistic({id:b.dataset.id,code:b.dataset.code,name:b.dataset.name})}});if(a==='toggle-student'){selectedStudents=selectedStudents.includes(b.dataset.id)?selectedStudents.filter(x=>x!==b.dataset.id):selectedStudents.concat([b.dataset.id]);focusStudents=focusStudents.filter(x=>selectedStudents.includes(x));renderPickers()}if(a==='toggle-focus'){focusStudents=focusStudents.includes(b.dataset.id)?focusStudents.filter(x=>x!==b.dataset.id):focusStudents.concat([b.dataset.id]);renderPickers()}});
+if($("teacherForm"))$("teacherForm").onsubmit=e=>{e.preventDefault();const item={id:editingTeacherId||id("teacher"),name:$("teacherName").value,note:$("teacherNote").value};apiPost({action:'teacher.save',...item},{optimistic:()=>{STATE.teachers=STATE.teachers.filter(x=>x.id!==item.id).concat([item])}}).then(()=>$("teacherDialog").close())};
+if($("studentForm"))$("studentForm").onsubmit=e=>{e.preventDefault();const item={id:editingStudentId||id("student"),name:$("studentName").value,grade:$("studentGrade").value,note:$("studentNote").value,groups:Array.from($("studentGroups").querySelectorAll("input:checked")).map(x=>x.value)};apiPost({action:'student.save',...item},{optimistic:()=>{STATE.students=STATE.students.filter(x=>x.id!==item.id).concat([item])}}).then(()=>$("studentDialog").close())};
+if($("availabilityForm"))$("availabilityForm").onsubmit=e=>{e.preventDefault();const t=STATE.teachers.find(x=>x.id===$("availTeacher").value);if(!t)return alert("請選老師");const inputs=Array.from($("availChecks").querySelectorAll("input")),dateKeys=[...new Set(inputs.map(x=>x.value.split("|")[0]))],slots=inputs.filter(x=>x.checked).map(x=>{const[dateKey,slotId]=x.value.split("|");return{dateKey,slotId}});apiPost({action:'availability.save',teacherId:t.id,teacherName:t.name,dateKeys,slots,note:$("availNote").value},{optimistic:()=>{STATE.availability=STATE.availability.filter(a=>!(a.teacherId===t.id&&dateKeys.includes(a.dateKey)));slots.forEach(s=>{const slot=STATE.slots.find(x=>x.id===s.slotId);if(slot)STATE.availability.push({id:id("av"),dateKey:s.dateKey,teacherId:t.id,teacherName:t.name,slotId:slot.id,slotName:slot.name,start:slot.start,end:slot.end,note:$("availNote").value})})}}).then(()=>$("availabilityDialog").close())};
+$("clearAvailability").onclick=()=>{const t=STATE.teachers.find(x=>x.id===$("availTeacher").value);if(!t)return alert("請選老師");const dateKeys=[...new Set(Array.from($("availChecks").querySelectorAll("input")).map(x=>x.value.split("|")[0]))];apiPost({action:'availability.clear',teacherId:t.id,dateKeys},{optimistic:()=>{STATE.availability=STATE.availability.filter(a=>!(a.teacherId===t.id&&dateKeys.includes(a.dateKey)))}}).then(()=>$("availabilityDialog").close())};
+if($("recordForm"))$("recordForm").onsubmit=e=>{e.preventDefault();const slot=STATE.slots.find(s=>s.id===wizardData.slotId),t=STATE.teachers.find(t=>t.id===$("recTeacher").value),students=STATE.students.filter(s=>selectedStudents.includes(s.id)),focus=STATE.students.filter(s=>focusStudents.includes(s.id));if(!slot)return alert("請先選擇上課時段");if(!t)return alert("請選擇老師");const item={id:editingRecordId||id("record"),dateKey:wizardData.dateKey,slotId:slot.id,slotName:slot.name,start:slot.start,end:slot.end,teacherId:t.id,teacherName:t.name,groupName:$("recGroup").value,studentIds:students.map(s=>s.id),studentNames:students.map(s=>s.name),focusStudentIds:focus.map(s=>s.id),focusStudentNames:focus.map(s=>s.name),focusTags:Array.from($("focusTagChecks").querySelectorAll("input:checked")).map(x=>x.value),parts:Array.from($("partChecks").querySelectorAll("input:checked")).map(x=>x.value),issues:Array.from($("issueChecks").querySelectorAll("input:checked")).map(x=>x.value),progressStage:$("progressStage").value,stability:$("stability").value,content:$("content").value,progress:$("progress").value,studentStatus:$("studentStatus").value,handoff:$("handoff").value,state:$("state").value};apiPost({action:'record.save',...item},{optimistic:()=>{STATE.records=STATE.records.filter(r=>r.id!==item.id).concat([{...item,syncStatus:'pending'}])}}).then(()=>$("recordDialog").close())};
+if($("eventForm"))$("eventForm").onsubmit=e=>{e.preventDefault();if(($("eventStart").value&&!/^([01]?\d|2[0-3]):[0-5]\d$/.test($("eventStart").value))||($("eventEnd").value&&!/^([01]?\d|2[0-3]):[0-5]\d$/.test($("eventEnd").value)))return alert("時間格式錯誤，請填 08:05 這種格式");const item={id:id("event"),dateKey:$("eventDate").value,title:$("eventTitle").value,type:$("eventType").value,start:$("eventStart").value,end:$("eventEnd").value,location:$("eventLocation").value,note:$("eventNote").value};apiPost({action:'event.save',...item},{optimistic:()=>{STATE.events=STATE.events.filter(x=>x.id!==item.id).concat([item])}}).then(()=>$("eventDialog").close())};
+$("saveSlot").onclick=()=>{
+  const name=$("slotName").value.trim();
+  if(!name)return alert("請輸入時段名稱");
+  if(!/^([01]?\d|2[0-3]):[0-5]\d$/.test($("slotStart").value)||!/^([01]?\d|2[0-3]):[0-5]\d$/.test($("slotEnd").value))return alert("時間格式錯誤，請填 08:05 這種格式");
+  const item={id:id("slot"),code:"custom",name,start:$("slotStart").value,end:$("slotEnd").value,weekday:String($("slotWeekday").value ?? "all"),sort:999,note:""};
+  apiPost({action:'slot.save',...item},{optimistic:()=>{STATE.slots=STATE.slots.concat([item])}}).then(()=>["slotName","slotStart","slotEnd"].forEach(x=>$(x).value=''))
+};
+$("saveConfig").onclick=()=>{const item={id:id("cfg"),type:$("configType").value,value:$("configValue").value,sort:999};apiPost({action:'config.save',...item},{optimistic:()=>{if(!STATE.config[item.type])STATE.config[item.type]=[];STATE.config[item.type].push(item.value)}}).then(()=>$("configValue").value='')};
+}
+try{bind()}catch(e){console.warn('bind skipped:',e)};apiGet();setTimeout(()=>{if(typeof flushQueue==='function')flushQueue()},1500);setTimeout(flushPending,1800);
+
+document.body.addEventListener("click",e=>{
+  const b=e.target.closest("button");
+  if(!b)return;
+  const a=b.dataset.action;
+  if(a==="edit-student")openStudent(b.dataset.id);
+  if(a==="delete-student"&&confirm("刪除學生？"))apiPost({action:"student.delete",id:b.dataset.id},{optimistic:()=>{STATE.students=STATE.students.filter(s=>s.id!==b.dataset.id)}});
+});
+
+
+/* V20.4 Queue Restore：canonical sync queue */
+const QUEUE_KEY = (typeof SYNC_KEY !== "undefined" ? SYNC_KEY : "recorderV20SyncQueue");
+const DEVICE_ID_SAFE = (typeof DEVICE_ID !== "undefined" ? DEVICE_ID : (()=>{let x=localStorage.getItem("recorderDeviceId");if(!x){x="dev_"+Math.random().toString(36).slice(2)+"_"+Date.now().toString(36);localStorage.setItem("recorderDeviceId",x)}return x})());
+
+function toast(msg){
+  try{
+    const box=$("loading");
+    if(!box){console.log(msg);return}
+    box.textContent=msg;
+    box.style.display="block";
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer=setTimeout(()=>{box.style.display="none";box.textContent="同步中……"},2400);
+  }catch(e){console.warn("toast skipped",e)}
+}
+
+function queueGet(){
+  try{
+    const raw=localStorage.getItem(QUEUE_KEY);
+    const arr=raw?JSON.parse(raw):[];
+    return Array.isArray(arr)?arr:[];
+  }catch(e){return []}
+}
+
+function queueSet(list){
+  try{
+    localStorage.setItem(QUEUE_KEY,JSON.stringify(list||[]));
+  }catch(e){
+    console.warn("queueSet failed",e);
+    alert("本機暫存空間不足，請先確認資料已同步。");
+  }
+  if(typeof updateSyncPanel==="function")updateSyncPanel();
+}
+
+function queueAdd(payload){
+  const item={...payload};
+  item.requestId=item.requestId||id("req");
+  item.deviceId=item.deviceId||DEVICE_ID_SAFE;
+  item.updatedAt=item.updatedAt||new Date().toISOString();
+  item.syncStatus=item.syncStatus||"pending";
+  item.retryCount=item.retryCount||0;
+  item.queuedAt=item.queuedAt||Date.now();
+
+  const list=queueGet().filter(x=>x.requestId!==item.requestId);
+  list.push(item);
+  queueSet(list);
+
+  setTimeout(()=>flushQueue(),0);
+  return item;
+}
+
+function queueRemove(requestId){
+  queueSet(queueGet().filter(x=>x.requestId!==requestId));
+}
+
+function queueMarkFailed(requestId,message){
+  queueSet(queueGet().map(x=>x.requestId===requestId?{...x,syncStatus:"failed",retryCount:(x.retryCount||0)+1,message:message||"同步失敗"}:x));
+}
+
+function payloadIsLong(p){
+  try{
+    const size=JSON.stringify(p||{}).length;
+    return p&&p.action==="record.save"&&size>1200;
+  }catch(e){return true}
+}
+
+async function postNoCors(payload){
+  await fetch(API_URL,{
+    method:"POST",
+    mode:"no-cors",
+    cache:"no-cache",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(payload)
+  });
+  return {ok:true,opaque:true};
+}
+
+async function syncCheck(item){
+  try{
+    let table="";
+    if((item.action||"").indexOf("record.")===0)table="records";
+    if((item.action||"").indexOf("event.")===0)table="events";
+    if((item.action||"").indexOf("teacher.")===0)table="teachers";
+    if((item.action||"").indexOf("student.")===0)table="students";
+    if((item.action||"").indexOf("slot.")===0)table="slots";
+    if(!table||!item.id)return false;
+    const result=await jsonp(API_URL+"?payload="+encodeURIComponent(JSON.stringify({action:"sync.check",table,id:item.id,requestId:id("check")})));
+    return !!(result&&result.ok&&result.found);
+  }catch(e){return false}
+}
+
+async function flushQueue(){
+  const list=queueGet();
+  if(!list.length)return true;
+  if(!navigator.onLine){toast("目前離線，已暫存在本機");return false}
+
+  toast("同步中："+list.length+" 筆");
+
+  for(const item of list.slice(0,6)){
+    try{
+      if(payloadIsLong(item)){
+        await postNoCors(item);
+        setTimeout(async()=>{
+          try{
+            if(await syncCheck(item)){
+              queueRemove(item.requestId);
+              toast("已同步");
+              if(typeof apiGet==="function")apiGet();
+            }else{
+              queueMarkFailed(item.requestId,"尚未確認寫入");
+              toast("尚未確認同步，可稍後重試");
+            }
+          }catch(e){queueMarkFailed(item.requestId,String(e&&e.message||e))}
+        },1800);
+      }else{
+        const result=await jsonp(API_URL+"?payload="+encodeURIComponent(JSON.stringify(item)));
+        if(result&&result.ok){
+          queueRemove(item.requestId);
+        }else{
+          queueMarkFailed(item.requestId,result&&result.message?result.message:"同步失敗");
+        }
+      }
+    }catch(e){
+      queueMarkFailed(item.requestId,String(e&&e.message||e));
+    }
+  }
+
+  setTimeout(()=>{if(typeof apiGet==="function")apiGet()},2000);
+  return true;
+}
+
+function syncBadgeHtml(status){
+  if(status==="pending")return '<span class="pill amber">同步中</span>';
+  if(status==="failed")return '<span class="pill red">同步失敗</span>';
+  return '<span class="pill">已同步</span>';
+}
+
+function safeSyncBadgeHtml(status){
+  try{return syncBadgeHtml(status)}
+  catch(e){return '<span class="pill">同步狀態未明</span>'}
+}
+
+function updateSyncPanel(){
+  try{
+    const list=queueGet();
+    const failed=list.filter(x=>x.syncStatus==="failed").length;
+    const pending=list.length-failed;
+    const el=$("syncPanel");
+    if(el){
+      el.innerHTML='<b>同步狀態</b><div class="muted">待同步：'+pending+' 筆｜失敗：'+failed+' 筆</div><button class="secondary" id="retrySync" type="button">手動重試</button>';
+      const btn=$("retrySync");
+      if(btn)btn.onclick=flushQueue;
+    }
+  }catch(e){console.warn("updateSyncPanel skipped",e)}
+}
+
+try{window.addEventListener("online",flushQueue)}catch(e){}
+
+</script>
+
+<dialog id="studentDialog">
+  <header><h2 id="studentDialogTitle">學生資料</h2><button class="secondary" type="button" onclick="$('studentDialog').close()">關閉</button></header>
+  <form id="studentForm" method="dialog" class="form">
+    <input type="hidden" id="studentId">
+    <label>姓名<input id="studentName" placeholder="例如：王小明"></label>
+    <label>年級<input id="studentGrade" placeholder="例如：五年級、六年級"></label>
+    <label>所屬團別<input id="studentGroups" placeholder="例如：初階,社團課,大團"></label>
+    <label>備註<textarea id="studentNote" placeholder="可留空"></textarea></label>
+    <footer><button class="primary" type="submit">儲存學生</button></footer>
+  </form>
+</dialog>
+
+</body>
+</html>
