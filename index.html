@@ -46,7 +46,7 @@
 <script>
 function safeSyncBadgeHtml(status){try{return syncBadgeHtml(status)}catch(e){return '<span class="pill">同步狀態未明</span>'}}
 
-const API_URL="PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+const API_URL="https://script.google.com/macros/s/AKfycbzCWmMg_zRKircWmnUlypdFkmhueW0xBtKm7s79pwNamQzE6lGGTENDiHHwLpO7561v/exec";
 const CACHE_KEY="recorderV20.3.6 Bind Null Guard";
 const DEVICE_ID=(()=>{let x=localStorage.getItem("recorderDeviceId");if(!x){x="dev_"+Math.random().toString(36).slice(2)+"_"+Date.now().toString(36);localStorage.setItem("recorderDeviceId",x)}return x})();
 const SYNC_KEY="recorderV20.3.6 Bind Null Guard";
