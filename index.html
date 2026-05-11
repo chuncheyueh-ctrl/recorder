@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>中正國小直笛團｜V22.1 Fast Save</title>
+<style>
+:root{
+  --bg:#fbf7f1;--card:#fffdf9;--ink:#3d2419;--muted:#8b7a70;--line:#e7dcd3;
+  --brand:#9a623b;--brand2:#c88d68;--red:#c84650;--green:#3f8d56;--yellow:#c78b2e;
+  --shadow:0 16px 36px rgba(61,36,25,.08);--radius:28px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#fffaf4 0%,#f6eee5 100%);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",system-ui,sans-serif;font-weight:750}
+button,input,select,textarea{font:inherit}
+button{border:0;border-radius:999px;padding:13px 18px;background:#fff;color:var(--brand);border:1px solid var(--line);font-weight:900}
+button.primary{background:linear-gradient(135deg,var(--brand2),var(--brand));color:white;border:0;box-shadow:var(--shadow)}
+button.danger{background:#b23834;color:#fff;border:0}
+button.small{padding:8px 12px;font-size:14px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:18px;padding:14px 16px;background:#fffdf9;color:var(--ink);font-weight:800}
+textarea{min-height:90px;resize:vertical}
+label{display:block;margin:12px 0 6px;color:var(--ink)}
+.app{max-width:980px;margin:auto;padding:24px 18px 108px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.icon{font-size:26px;background:#fff;border:1px solid var(--line);padding:12px 15px}
+h1{font-size:42px;line-height:1.05;margin:28px 0 6px}
+.version{font-size:18px;color:var(--muted)}
+.datebar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:28px 0;flex-wrap:wrap}
+.datebar .date{font-size:34px;font-weight:1000}
+.grid{display:grid;gap:18px}
+.card{background:rgba(255,253,249,.94);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.cardTitle{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.cardTitle h2{font-size:30px;margin:0}
+.sub{color:var(--muted);font-size:16px;margin-top:4px}
+.empty{border:1px dashed var(--line);border-radius:22px;padding:18px;color:var(--muted);margin-top:16px}
+.list{display:grid;gap:12px;margin-top:16px}
+.item{border:1px solid var(--line);border-radius:22px;padding:16px;background:#fff}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;border-radius:999px;padding:7px 10px;background:#f3eadf;color:var(--brand);font-size:13px;margin:3px}
+.pill.green{background:#e8f5e9;color:var(--green)}
+.pill.red{background:#ffe8ea;color:var(--red)}
+.pill.yellow{background:#fff3d7;color:#9a6510}
+.tabs{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:min(92vw,640px);background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);display:grid;grid-template-columns:repeat(5,1fr);z-index:50;overflow:hidden}
+.tab{border:0;border-radius:0;background:transparent;padding:12px 4px;color:var(--muted)}
+.tab.active{color:var(--brand)}
+.fab{position:fixed;right:22px;bottom:92px;z-index:60}
+.page{display:none}
+.page.active{display:block}
+.weekChips{display:flex;gap:10px;overflow:auto;padding:4px 0 2px}
+.dayChip{min-width:86px;border-radius:22px}
+.dayChip.active{background:var(--brand);color:white}
+.weekday{font-size:12px;opacity:.75;margin-top:2px}
+.weekdayChecks{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.weekdayChecks label{margin:0;border:1px solid var(--line);border-radius:16px;padding:10px 12px;background:#fffdf9;color:var(--ink)}
+.weekdayChecks input{width:auto;margin-right:6px}
+dialog{border:0;border-radius:30px;padding:0;max-width:min(92vw,760px);width:720px;box-shadow:0 24px 80px rgba(0,0,0,.25);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.42);backdrop-filter:blur(4px)}
+.dialogHead{display:flex;align-items:center;justify-content:space-between;padding:22px 24px;border-bottom:1px solid var(--line);background:#fff7ef}
+.dialogBody{padding:22px 24px;max-height:74vh;overflow:auto}
+.formGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 16px}
+.full{grid-column:1/-1}
+.toast{position:fixed;left:20px;bottom:92px;background:#2b211d;color:#fff;border-radius:999px;padding:12px 18px;z-index:80;display:none}
+@media(max-width:760px){
+  h1{font-size:34px}.datebar .date{font-size:28px}.formGrid{grid-template-columns:1fr}
+  .app{padding:18px 14px 108px}.card{padding:18px}.cardTitle h2{font-size:26px}
+  .weekdayChecks{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <button class="icon" id="menuBtn">☰</button>
+    <button class="icon">♡</button>
+  </div>
+  <h1>中正國小直笛團</h1>
+  <div class="version">V22.1 Fast Save 教師工作台</div>
+
+  <div class="datebar">
+    <button id="prevDay">前一天</button>
+    <div>目前查看 <span class="date" id="currentDate">讀取中</span></div>
+    <button id="todayBtn">今天</button>
+    <button id="nextDay">後一天</button>
+  </div>
+
+  <section id="page-today" class="page active">
+    <div class="grid">
+      <div class="card">
+        <div class="cardTitle"><h2>可到校老師</h2><button id="openAvail" data-action="open-availability">查看 / 填寫</button></div>
+        <div class="sub" id="availSummary">讀取中</div>
+        <div id="todayAvailability" class="list"></div>
+      </div>
+
+      <div class="card">
+        <div class="cardTitle"><h2>課程紀錄</h2><button id="openRecordList">查看全部</button></div>
+        <div class="sub" id="recordSummary">讀取中</div>
+        <div id="todayRecords" class="list"></div>
+      </div>
+
+      <div class="card">
+        <div class="cardTitle"><h2>教學接力</h2></div>
+        <div class="sub" id="handoffSummary">讀取中</div>
+        <div id="handoffList" class="list"></div>
+      </div>
+
+      <div class="card">
+        <div class="cardTitle"><h2>未參與學生</h2></div>
+        <div class="sub" id="absentSummary">今日統計</div>
+        <div id="absentList"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-records" class="page">
+    <div class="card">
+      <div class="cardTitle"><h2>依日期與時段填寫</h2></div>
+      <div class="weekChips" id="weekChips"></div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <div class="cardTitle"><h2>本週所有紀錄</h2></div>
+      <div id="allRecords" class="list"></div>
+    </div>
+  </section>
+
+  <section id="page-calendar" class="page">
+    <div class="card">
+      <div class="cardTitle"><h2>行事曆</h2><button id="addEvent">新增事件</button></div>
+      <div id="eventList" class="list"></div>
+    </div>
+  </section>
+
+  <section id="page-analytics" class="page">
+    <div class="card">
+      <div class="cardTitle"><h2>分析</h2></div>
+      <div id="analyticsBox" class="list"></div>
+    </div>
+  </section>
+
+  <section id="page-more" class="page">
+    <div class="grid">
+      <div class="card">
+        <div class="cardTitle"><h2>老師管理</h2><button id="addTeacher">新增老師</button></div>
+        <div id="teacherList" class="list"></div>
+      </div>
+      <div class="card">
+        <div class="cardTitle"><h2>學生管理</h2><button id="addStudent">新增學生</button></div>
+        <div id="studentList" class="list"></div>
+      </div>
+      <div class="card">
+        <div class="cardTitle"><h2>時段管理</h2><button id="addSlot">新增時段</button></div>
+        <div id="slotList" class="list"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<button class="primary fab" id="fab">＋ 新增紀錄</button>
+<div class="tabs">
+  <button class="tab active" data-page="today">今日</button>
+  <button class="tab" data-page="records">紀錄</button>
+  <button class="tab" data-page="calendar">行事曆</button>
+  <button class="tab" data-page="analytics">分析</button>
+  <button class="tab" data-page="more">更多</button>
+</div>
+<div class="toast" id="toast">同步中</div>
+
+<dialog id="recordDialog">
+  <div class="dialogHead"><h2>教學紀錄</h2><button type="button" onclick="closeDialog('recordDialog')">關閉</button></div>
+  <div class="dialogBody">
+    <form id="recordForm">
+      <input type="hidden" id="recordId">
+      <div class="formGrid">
+        <label>日期<input type="date" id="recordDate"></label>
+        <label>時段<select id="recordSlot"></select></label>
+        <label>團別<select id="recordGroup"></select></label>
+        <label>老師<select id="recordTeacher"></select></label>
+        <label class="full">今天教學<textarea id="recordContent" placeholder="今天教了什麼？"></textarea></label>
+        <label class="full">目前進度<textarea id="recordProgress" placeholder="目前到哪裡？"></textarea></label>
+        <label class="full">學生狀況<textarea id="recordStudentStatus"></textarea></label>
+        <label class="full">交接<textarea id="recordHandoff" placeholder="給下一位老師的提醒"></textarea></label>
+        <label>狀態<select id="recordState"></select></label>
+      </div>
+      <p><button class="primary" type="submit">儲存紀錄</button></p>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="availDialog">
+  <div class="dialogHead"><h2>老師可到校時段</h2><button type="button" onclick="closeDialog('availDialog')">關閉</button></div>
+  <div class="dialogBody">
+    <form id="availForm">
+      <div class="formGrid">
+        <label>日期<input type="date" id="availDate"></label>
+        <label>老師<select id="availTeacher"></select></label>
+        <label class="full">可到校時段<div id="availSlots" class="list"></div></label>
+        <label class="full">備註<textarea id="availNote"></textarea></label>
+      </div>
+      <p><button class="primary" type="submit">儲存可到校</button></p>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="teacherDialog">
+  <div class="dialogHead"><h2>老師資料</h2><button type="button" onclick="closeDialog('teacherDialog')">關閉</button></div>
+  <div class="dialogBody">
+    <form id="teacherForm">
+      <input type="hidden" id="teacherId">
+      <label>姓名<input id="teacherName"></label>
+      <label>備註<textarea id="teacherNote"></textarea></label>
+      <p><button class="primary" type="submit">儲存老師</button></p>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="studentDialog">
+  <div class="dialogHead"><h2>學生資料</h2><button type="button" onclick="closeDialog('studentDialog')">關閉</button></div>
+  <div class="dialogBody">
+    <form id="studentForm">
+      <input type="hidden" id="studentId">
+      <div class="formGrid">
+        <label>姓名<input id="studentName"></label>
+        <label>年級<input id="studentGrade"></label>
+        <label class="full">所屬團別<input id="studentGroups" placeholder="可用逗號分隔"></label>
+        <label class="full">備註<textarea id="studentNote"></textarea></label>
+      </div>
+      <p><button class="primary" type="submit">儲存學生</button></p>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="slotDialog">
+  <div class="dialogHead"><h2>時段資料</h2><button type="button" onclick="closeDialog('slotDialog')">關閉</button></div>
+  <div class="dialogBody">
+    <form id="slotForm">
+      <input type="hidden" id="slotId">
+      <div class="formGrid">
+        <label>名稱<input id="slotName" placeholder="例如：早自習"></label>
+        <label>開始<input id="slotStart" placeholder="08:05"></label>
+        <label>結束<input id="slotEnd" placeholder="08:35"></label>
+        <label class="full">適用日
+          <div class="weekdayChecks" id="slotWeekdayChecks">
+            <label><input type="checkbox" value="1"> 週一</label>
+            <label><input type="checkbox" value="2"> 週二</label>
+            <label><input type="checkbox" value="3"> 週三</label>
+            <label><input type="checkbox" value="4"> 週四</label>
+            <label><input type="checkbox" value="5"> 週五</label>
+            <label><input type="checkbox" value="6"> 週六</label>
+            <label><input type="checkbox" value="0"> 週日</label>
+          </div>
+        </label>
+        <label class="full">備註<textarea id="slotNote"></textarea></label>
+      </div>
+      <p><button class="primary" type="submit">儲存時段</button></p>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="eventDialog">
+  <div class="dialogHead"><h2>行事曆事件</h2><button type="button" onclick="closeDialog('eventDialog')">關閉</button></div>
+  <div class="dialogBody">
+    <form id="eventForm">
+      <input type="hidden" id="eventId">
+      <div class="formGrid">
+        <label>日期<input type="date" id="eventDate"></label>
+        <label>類型<select id="eventType"></select></label>
+        <label class="full">標題<input id="eventTitle"></label>
+        <label>開始<input id="eventStart" placeholder="08:00"></label>
+        <label>結束<input id="eventEnd" placeholder="16:00"></label>
+        <label class="full">地點<input id="eventLocation"></label>
+        <label class="full">備註<textarea id="eventNote"></textarea></label>
+      </div>
+      <p><button class="primary" type="submit">儲存事件</button></p>
+    </form>
+  </div>
+</dialog>
+
+<script>
+const API_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+const $ = id => document.getElementById(id);
+const state = {
+  dateKey: toDateKey(new Date()),
+  weekStart: '',
+  month: '',
+  teachers: [],
+  students: [],
+  slots: [],
+  availability: [],
+  records: [],
+  events: [],
+  config: {},
+  page: 'today'
+};
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function id(prefix){return prefix+'_'+Math.random().toString(36).slice(2,10)+'_'+Date.now().toString(36)}
+function pad(n){return String(n).padStart(2,'0')}
+function toDateKey(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function parseDate(key){const [y,m,d]=String(key).split('-').map(Number);return new Date(y,m-1,d)}
+function zhWeek(d){return ['日','一','二','三','四','五','六'][d.getDay()]}
+function displayDate(key){const d=parseDate(key);return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}（${zhWeek(d)}）`}
+function mdWeek(key){const d=parseDate(key);return `${d.getMonth()+1}/${d.getDate()}（${zhWeek(d)}）`}
+function monday(key){const d=parseDate(key);const day=d.getDay();const diff=day===0?-6:1-day;d.setDate(d.getDate()+diff);return toDateKey(d)}
+function addDays(key,n){const d=parseDate(key);d.setDate(d.getDate()+n);return toDateKey(d)}
+function weekDates(key){const start=monday(key);return Array.from({length:7},(_,i)=>addDays(start,i))}
+function timeRange(a,b){return `${a||''}${b?'–'+b:''}`}
+function weekdayOk(slot,dateKey){
+  const w=String(slot.weekdays||slot.weekday||'all');
+  if(!w || w==='all' || w==='每天')return true;
+  return w.split(',').includes(String(parseDate(dateKey).getDay()));
+}
+function weekdayLabel(value){
+  const map={'0':'週日','1':'週一','2':'週二','3':'週三','4':'週四','5':'週五','6':'週六'};
+  const s=String(value||'all');
+  if(s==='all'||s==='每天'||s==='')return '每天';
+  return s.split(',').filter(Boolean).map(x=>map[x]||x).join('、');
+}
+function getSlotWeekdays(){
+  const checked=[...document.querySelectorAll('#slotWeekdayChecks input:checked')].map(x=>x.value);
+  return checked.length===0 || checked.length===7 ? 'all' : checked.join(',');
+}
+function setSlotWeekdays(value){
+  const s=String(value||'all');
+  const all=s==='all'||s==='每天'||s==='';
+  const values=all?['0','1','2','3','4','5','6']:s.split(',').filter(Boolean);
+  document.querySelectorAll('#slotWeekdayChecks input').forEach(input=>input.checked=values.includes(input.value));
+}
+function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2200)}
+function closeDialog(id){const d=$(id);if(d)d.close()}
+
+function jsonp(url){
+  return new Promise((resolve,reject)=>{
+    const cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const sep=url.includes('?')?'&':'?';
+    const script=document.createElement('script');
+    const timer=setTimeout(()=>{cleanup();reject(new Error('讀取逾時'))},45000);
+    function cleanup(){clearTimeout(timer);delete window[cb];script.remove()}
+    window[cb]=data=>{cleanup();resolve(data)};
+    script.onerror=()=>{cleanup();reject(new Error('JSONP 載入失敗'))};
+    script.src=url+sep+'callback='+cb+'&_='+Date.now();
+    document.body.appendChild(script);
+  });
+}
+
+async function apiGet(){
+  if(!API_URL || API_URL.includes('PASTE_YOUR')){
+    alert('請先在 index.html 設定 API_URL');
+    return;
+  }
+  const weekStart=monday(state.dateKey);
+  const month=state.dateKey.slice(0,7);
+  toast('讀取中');
+  try{
+    const url=API_URL+'?dateKey='+encodeURIComponent(state.dateKey)+'&weekStart='+encodeURIComponent(weekStart)+'&month='+encodeURIComponent(month);
+    const data=await jsonp(url);
+    if(!data.ok){alert('讀取失敗：'+(data.message||''));return}
+    Object.assign(state,data);
+    render();
+  }catch(e){
+    alert('讀取失敗：'+String(e.message||e));
+  }
+}
+
+async function apiPost(payload,opt={}){
+  const text=JSON.stringify(payload||{});
+  if(text.length>6500){
+    alert('這筆資料太長，請先縮短文字後再儲存。');
+    return {ok:false,message:'payload too long'};
+  }
+  payload.requestId=payload.requestId||id('req');
+  toast('寫入中');
+  try{
+    const url=API_URL+'?payload='+encodeURIComponent(JSON.stringify(payload));
+    const res=await jsonp(url);
+    if(!res || !res.ok){
+      alert('寫入失敗：'+(res&&res.message?res.message:'未知錯誤'));
+      return res;
+    }
+    toast('已儲存');
+
+    if(opt.localUpdate){
+      try{ opt.localUpdate(res); render(); }catch(e){ console.warn('localUpdate failed', e); }
+    }
+
+    if(opt.reload !== false){
+      await apiGet();
+    }else if(opt.reloadDelay){
+      clearTimeout(window.reloadTimer);
+      window.reloadTimer=setTimeout(()=>apiGet(), opt.reloadDelay);
+    }
+
+    return res;
+  }catch(e){
+    alert('寫入失敗：'+String(e.message||e));
+    return {ok:false,message:String(e.message||e)};
+  }
+}
+
+function optionHtml(items,selected=''){
+  const seen=new Set();
+  return (items||[]).filter(x=>{
+    const val=String(x && (x.id||x.value||x.name) || x);
+    if(seen.has(val))return false;
+    seen.add(val);
+    return true;
+  }).map(x=>`<option value="${esc(x.id||x)}" ${String(selected)===String(x.id||x)?'selected':''}>${esc(x.name||x.value||x)}</option>`).join('');
+}
+
+function render(){
+  $('currentDate').textContent=displayDate(state.dateKey);
+  renderTabs();
+  renderToday();
+  renderRecordsPage();
+  renderCalendar();
+  renderAnalytics();
+  renderMore();
+  fillSelects();
+}
+
+function renderTabs(){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.page===state.page));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const page=$('page-'+state.page);
+  if(page)page.classList.add('active');
+}
+
+function todaySlots(){
+  return state.slots.filter(s=>weekdayOk(s,state.dateKey));
+}
+
+function renderToday(){
+  const av=state.availability.filter(a=>a.dateKey===state.dateKey);
+  const rec=state.records.filter(r=>r.dateKey===state.dateKey);
+
+  $('availSummary').textContent=`${new Set(av.map(a=>a.teacherId)).size} 位老師・共 ${av.length} 個時段`;
+  $('todayAvailability').innerHTML=av.length?av.map(a=>`
+    <div class="item row"><div><b>${esc(a.teacherName)}</b><div>${esc(a.slotName)} ${timeRange(a.start,a.end)}</div>${a.note?`<div class="sub">${esc(a.note)}</div>`:''}</div><span class="pill green">可到校</span></div>
+  `).join(''):'<div class="empty">目前這一天尚無老師填寫可到校時段。</div>';
+
+  const slots=todaySlots();
+  $('recordSummary').textContent=`共 ${slots.length} 節課・待完成 ${Math.max(0,slots.length-rec.length)} 節`;
+  $('todayRecords').innerHTML=slots.length?slots.map(s=>{
+    const r=rec.find(x=>x.slotId===s.id);
+    return r?recordCard(r):`
+      <div class="item row"><div><b>${esc(s.name)}</b><div>${timeRange(s.start,s.end)}<br>${mdWeek(state.dateKey)}</div></div><button class="pill red" type="button" onclick="openRecord('${s.id}')">待填寫 ›</button></div>
+    `;
+  }).join(''):'<div class="empty">今天沒有適用時段。</div>';
+
+  const handoffs=rec.filter(r=>r.handoff);
+  $('handoffSummary').textContent=`${handoffs.length} 則交接`;
+  $('handoffList').innerHTML=handoffs.length?handoffs.map(r=>`
+    <div class="item"><b>${esc(r.groupName||'未分類')}｜${esc(r.teacherName||'')}</b><div>${esc(r.handoff)}</div><div class="sub">${esc(r.slotName)} ${timeRange(r.start,r.end)}</div></div>
+  `).join(''):'<div class="empty">目前沒有交接事項。</div>';
+
+  $('absentList').innerHTML=state.students.length?state.students.slice(0,16).map(s=>`<span class="pill">${esc(s.name)}</span>`).join(''):'<div class="empty">尚未建立學生名單。</div>';
+}
+
+function recordCard(r){
+  return `<div class="item">
+    <div class="row"><div><b>${esc(r.slotName)} ${timeRange(r.start,r.end)}</b><div class="sub">${esc(r.dateKey)}｜${esc(r.groupName)}｜${esc(r.teacherName)}</div></div><span class="pill ${r.state==='已完成'?'green':'yellow'}">${esc(r.state||'已完成')}</span></div>
+    ${r.content?`<p><b>教學：</b>${esc(r.content)}</p>`:''}
+    ${r.progress?`<p><b>進度：</b>${esc(r.progress)}</p>`:''}
+    ${r.studentStatus?`<p><b>學生：</b>${esc(r.studentStatus)}</p>`:''}
+    ${r.handoff?`<p><b>交接：</b>${esc(r.handoff)}</p>`:''}
+    <button class="small" type="button" onclick="openRecord('${esc(r.slotId)}','${esc(r.id)}')">編輯</button>
+    <button class="small danger" type="button" onclick="deleteRecord('${esc(r.id)}')">刪除</button>
+  </div>`;
+}
+
+function renderRecordsPage(){
+  const days=weekDates(state.dateKey);
+  $('weekChips').innerHTML=days.map(d=>`<button class="dayChip ${d===state.dateKey?'active':''}" type="button" onclick="changeDate('${d}')"><div>${d.slice(5).replace('-','/')}</div><div class="weekday">（${zhWeek(parseDate(d))}）</div></button>`).join('');
+  $('allRecords').innerHTML=state.records.length?state.records.map(recordCard).join(''):'<div class="empty">本週沒有紀錄。</div>';
+}
+
+function renderCalendar(){
+  $('eventList').innerHTML=state.events.length?state.events.map(e=>`
+    <div class="item row"><div><b>${esc(e.title)}</b><div>${esc(e.dateKey)}｜${esc(e.type)}｜${timeRange(e.start,e.end)}</div><div class="sub">${esc(e.location||'')}</div></div><button class="danger small" type="button" onclick="deleteEvent('${esc(e.id)}')">刪除</button></div>
+  `).join(''):'<div class="empty">本月沒有事件。</div>';
+}
+
+function renderAnalytics(){
+  $('analyticsBox').innerHTML=`
+    <div class="item"><b>本週紀錄</b><div>${state.records.length} 筆</div></div>
+    <div class="item"><b>老師</b><div>${state.teachers.length} 位</div></div>
+    <div class="item"><b>學生</b><div>${state.students.length} 位</div></div>
+    <div class="item"><b>時段</b><div>${state.slots.length} 個</div></div>
+  `;
+}
+
+function renderMore(){
+  $('teacherList').innerHTML=state.teachers.length?state.teachers.map(t=>`
+    <div class="item row"><div><b>${esc(t.name)}</b><div class="sub">${esc(t.note||'')}</div></div><div><button class="small" type="button" onclick="openTeacher('${esc(t.id)}')">編輯</button><button class="small danger" type="button" onclick="deleteTeacher('${esc(t.id)}')">刪除</button></div></div>
+  `).join(''):'<div class="empty">尚無老師。</div>';
+
+  $('studentList').innerHTML=state.students.length?state.students.map(s=>`
+    <div class="item row"><div><b>${esc(s.name)}</b><div class="sub">${esc(s.grade||'')} ${esc(s.groups||'')}</div></div><div><button class="small" type="button" onclick="openStudent('${esc(s.id)}')">編輯</button><button class="small danger" type="button" onclick="deleteStudent('${esc(s.id)}')">刪除</button></div></div>
+  `).join(''):'<div class="empty">尚無學生。</div>';
+
+  $('slotList').innerHTML=state.slots.length?state.slots.map(s=>`
+    <div class="item row"><div><b>${esc(s.name)}</b><div class="sub">${timeRange(s.start,s.end)}｜${weekdayLabel(s.weekdays)}</div></div><div><button class="small" type="button" onclick="openSlot('${esc(s.id)}')">編輯</button><button class="small danger" type="button" onclick="deleteSlot('${esc(s.id)}')">刪除</button></div></div>
+  `).join(''):'<div class="empty">尚無時段。</div>';
+}
+
+function fillSelects(){
+  $('recordSlot').innerHTML=optionHtml(todaySlots());
+  $('recordTeacher').innerHTML=optionHtml(state.teachers);
+  $('availTeacher').innerHTML=optionHtml(state.teachers);
+  $('recordGroup').innerHTML=optionHtml(state.config.group||[]);
+  $('recordState').innerHTML=optionHtml(state.config.state||['已完成']);
+  $('eventType').innerHTML=optionHtml(state.config.eventType||[]);
+  $('availSlots').innerHTML=todaySlots().map(s=>`<label class="item"><input type="checkbox" value="${esc(s.id)}"> ${esc(s.name)} ${timeRange(s.start,s.end)}</label>`).join('') || '<div class="empty">今天沒有可勾選的時段。</div>';
+}
+
+function openRecord(slotId='',recordId=''){
+  const r=state.records.find(x=>x.id===recordId)||{};
+  $('recordId').value=r.id||'';
+  $('recordDate').value=r.dateKey||state.dateKey;
+  fillSelects();
+  $('recordSlot').value=r.slotId||slotId||todaySlots()[0]?.id||'';
+  $('recordGroup').value=r.groupName||'';
+  $('recordTeacher').value=r.teacherId||state.teachers[0]?.id||'';
+  $('recordContent').value=r.content||'';
+  $('recordProgress').value=r.progress||'';
+  $('recordStudentStatus').value=r.studentStatus||'';
+  $('recordHandoff').value=r.handoff||'';
+  $('recordState').value=r.state||'已完成';
+  $('recordDialog').showModal();
+}
+
+function openAvail(){
+  $('availDate').value=state.dateKey;
+  fillSelects();
+  $('availTeacher').value=state.teachers[0]?.id||'';
+  $('availNote').value='';
+  $('availDialog').showModal();
+}
+
+function openTeacher(id=''){
+  const t=state.teachers.find(x=>x.id===id)||{};
+  $('teacherId').value=t.id||'';
+  $('teacherName').value=t.name||'';
+  $('teacherNote').value=t.note||'';
+  $('teacherDialog').showModal();
+}
+
+function openStudent(id=''){
+  const s=state.students.find(x=>x.id===id)||{};
+  $('studentId').value=s.id||'';
+  $('studentName').value=s.name||'';
+  $('studentGrade').value=s.grade||'';
+  $('studentGroups').value=s.groups||'';
+  $('studentNote').value=s.note||'';
+  $('studentDialog').showModal();
+}
+
+function openSlot(id=''){
+  const s=state.slots.find(x=>x.id===id)||{};
+  $('slotId').value=s.id||'';
+  $('slotName').value=s.name||'';
+  $('slotStart').value=s.start||'';
+  $('slotEnd').value=s.end||'';
+  setSlotWeekdays(s.weekdays||'all');
+  $('slotNote').value=s.note||'';
+  $('slotDialog').showModal();
+}
+
+function openEvent(id=''){
+  fillSelects();
+  const e=state.events.find(x=>x.id===id)||{};
+  $('eventId').value=e.id||'';
+  $('eventDate').value=e.dateKey||state.dateKey;
+  $('eventTitle').value=e.title||'';
+  $('eventType').value=e.type||'';
+  $('eventStart').value=e.start||'';
+  $('eventEnd').value=e.end||'';
+  $('eventLocation').value=e.location||'';
+  $('eventNote').value=e.note||'';
+  $('eventDialog').showModal();
+}
+
+function changeDate(key){state.dateKey=key;apiGet()}
+
+async function deleteRecord(id){if(confirm('刪除這筆紀錄？'))await apiPost({action:'record.delete',id},{reload:false,localUpdate:()=>removeLocal('records',id),reloadDelay:1200})}
+async function deleteTeacher(id){if(confirm('刪除老師？'))await apiPost({action:'teacher.delete',id},{reload:false,localUpdate:()=>removeLocal('teachers',id),reloadDelay:1200})}
+async function deleteStudent(id){if(confirm('刪除學生？'))await apiPost({action:'student.delete',id},{reload:false,localUpdate:()=>removeLocal('students',id),reloadDelay:1200})}
+async function deleteSlot(id){if(confirm('刪除時段？'))await apiPost({action:'slot.delete',id},{reload:false,localUpdate:()=>removeLocal('slots',id),reloadDelay:1200})}
+async function deleteEvent(id){if(confirm('刪除事件？'))await apiPost({action:'event.delete',id},{reload:false,localUpdate:()=>removeLocal('events',id),reloadDelay:1200})}
+
+
+function upsertLocal(table,item){
+  if(!state[table]) return;
+  state[table]=state[table].filter(x=>x.id!==item.id).concat([item]);
+}
+
+function removeLocal(table,id){
+  if(!state[table]) return;
+  state[table]=state[table].filter(x=>x.id!==id);
+}
+
+function bind(){
+  document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{state.page=b.dataset.page;render()});
+  $('prevDay').onclick=()=>changeDate(addDays(state.dateKey,-1));
+  $('nextDay').onclick=()=>changeDate(addDays(state.dateKey,1));
+  $('todayBtn').onclick=()=>changeDate(toDateKey(new Date()));
+  $('fab').onclick=()=>openRecord();
+  $('openRecordList').onclick=()=>{state.page='records';render()};
+  $('openAvail').onclick=openAvail;
+  $('addTeacher').onclick=()=>openTeacher();
+  $('addStudent').onclick=()=>openStudent();
+  $('addSlot').onclick=()=>openSlot();
+  $('addEvent').onclick=()=>openEvent();
+
+  $('recordForm').onsubmit=async e=>{
+    e.preventDefault();
+    const slot=state.slots.find(s=>s.id===$('recordSlot').value)||{};
+    const teacher=state.teachers.find(t=>t.id===$('recordTeacher').value)||{};
+    const item={
+      id:$('recordId').value||id('record'),
+      dateKey:$('recordDate').value,
+      slotId:$('recordSlot').value,
+      slotName:slot.name||'',
+      start:slot.start||'',
+      end:slot.end||'',
+      groupName:$('recordGroup').value,
+      teacherId:$('recordTeacher').value,
+      teacherName:teacher.name||'',
+      content:$('recordContent').value,
+      progress:$('recordProgress').value,
+      studentStatus:$('recordStudentStatus').value,
+      handoff:$('recordHandoff').value,
+      state:$('recordState').value
+    };
+    await apiPost({action:'record.save',...item},{reload:false,localUpdate:()=>upsertLocal('records',item),reloadDelay:1200});
+    $('recordDialog').close();
+  };
+
+  $('availForm').onsubmit=async e=>{
+    e.preventDefault();
+    const dateKey=$('availDate').value;
+    const teacher=state.teachers.find(t=>t.id===$('availTeacher').value)||{};
+    const slotIds=[...$('availSlots').querySelectorAll('input:checked')].map(c=>c.value);
+
+    await apiPost({
+      action:'availability.batchSave',
+      dateKey,
+      teacherId:teacher.id,
+      teacherName:teacher.name,
+      slotIds,
+      note:$('availNote').value
+    },{
+      reload:false,
+      localUpdate:()=>{
+        state.availability=state.availability.filter(a=>!(a.dateKey===dateKey && a.teacherId===teacher.id));
+        slotIds.forEach(slotId=>{
+          const slot=state.slots.find(s=>s.id===slotId)||{};
+          state.availability.push({
+            id:id('avail_local'),
+            dateKey,
+            teacherId:teacher.id,
+            teacherName:teacher.name,
+            slotId:slot.id,
+            slotName:slot.name,
+            start:slot.start,
+            end:slot.end,
+            note:$('availNote').value,
+            status:'active'
+          });
+        });
+      },
+      reloadDelay:1200
+    });
+    $('availDialog').close();
+  };
+
+  $('teacherForm').onsubmit=async e=>{
+    e.preventDefault();
+    const item={id:$('teacherId').value||id('teacher'),name:$('teacherName').value,note:$('teacherNote').value};
+    await apiPost({action:'teacher.save',...item},{reload:false,localUpdate:()=>upsertLocal('teachers',item),reloadDelay:1200});
+    $('teacherDialog').close();
+  };
+
+  $('studentForm').onsubmit=async e=>{
+    e.preventDefault();
+    const item={id:$('studentId').value||id('student'),name:$('studentName').value,grade:$('studentGrade').value,groups:$('studentGroups').value,note:$('studentNote').value};
+    await apiPost({action:'student.save',...item},{reload:false,localUpdate:()=>upsertLocal('students',item),reloadDelay:1200});
+    $('studentDialog').close();
+  };
+
+  $('slotForm').onsubmit=async e=>{
+    e.preventDefault();
+    const item={id:$('slotId').value||id('slot'),name:$('slotName').value,start:$('slotStart').value,end:$('slotEnd').value,weekdays:getSlotWeekdays(),note:$('slotNote').value};
+    await apiPost({action:'slot.save',...item},{reload:false,localUpdate:()=>upsertLocal('slots',item),reloadDelay:1200});
+    $('slotDialog').close();
+  };
+
+  $('eventForm').onsubmit=async e=>{
+    e.preventDefault();
+    const item={id:$('eventId').value||id('event'),dateKey:$('eventDate').value,title:$('eventTitle').value,type:$('eventType').value,start:$('eventStart').value,end:$('eventEnd').value,location:$('eventLocation').value,note:$('eventNote').value};
+    await apiPost({action:'event.save',...item},{reload:false,localUpdate:()=>upsertLocal('events',item),reloadDelay:1200});
+    $('eventDialog').close();
+  };
+}
+
+bind();
+apiGet();
+</script>
+</body>
+</html>
